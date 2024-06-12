@@ -32,7 +32,7 @@ const ValidatorAdTemplate: React.FC<ValidatorAdTemplateProps> = ({ validatorAd }
           setup fee charged is {feeSetup.toString()} uALGO. The operational fee is {feeRound.toString()} uALGO/round.
         </li>
         <li>Understands that the fees will be available for claiming after the end of the contract with a delegator.</li>
-        <li>Commits to donate {earnFactor.toString()}% of the fees I generate to the IgoProtect platform for its maintenance.</li>
+        <li>Commits to donate {earnFactor!.toString()}% of the fees I generate to the IgoProtect platform for its maintenance.</li>
         <li>
           Requires a new delegator to deposit {deposit.toString()} uALGO that can be seized in case of delegator breaching the agreed
           contract.

@@ -2,6 +2,8 @@
 
 Welcome to the IgoProtect - a decentralized peer-to-peer consensus delegation platform!
 
+The platform can be accessed on Testnet at: [https://igoprotect.vercel.app/](https://igoprotect.vercel.app/)
+
 This README provides an overview of the platform, instructions for its use, and deployment in a local environment.
 
 The project was developed using [AlgoKit](https://developer.algorand.org/algokit/).
@@ -142,6 +144,15 @@ There is also a [video guide](https://youtu.be/_hYqhcWp164) on how to manage an 
 For more information about the project, check the project [pitch](/pitch/pitch.pptx) and [demo video](https://youtu.be/Bystrpc-Pkg).
 Follow the project also at various social networks like X ([@IgoProtect](https://x.com/IgoProtect)) and Youtube ([@IgoProtect](https://www.youtube.com/@IgoProtect)).
 
+# Use on Testnet
+
+The platform can be accessed at: [https://igoprotect.vercel.app/](https://igoprotect.vercel.app/)
+It is connected to Algorand Testnet.
+The Noticeboard app ID is: [680343624](https://testnet.explorer.perawallet.app/application/680343624/)
+For testing, you will need an Algorand compatible wallet like [Defly](https://defly.app/) or [Pera](https://perawallet.app/) with an account with some testnet ALGO.
+You can get testnet ALGO with [Testnet dispenser](https://bank.testnet.algorand.network/).
+
+If you test the platform, please give us any feedback you might have via any social networks. Thank you already in advance for helping to improve IgoProtect!
 
 # Use in Local Environment
 
@@ -158,7 +169,7 @@ This section provides instructions for deploying the platform on AlgoKit localne
 3) Install all dependencies: `algokit project bootstrap all`
 4) Start localnet: `algokit localnet start`
 5) Deploy a new instance of the platform: `algokit project deploy localnet`
-6) Navigate to `frontend` directory `cd projects/frontend` and start the UI by running `npm run dev`. You can access the UI at ` http://localhost:5173/`.
+6) Navigate to `frontend` directory `cd projects/frontent` and start the UI by running `npm run dev`. You can access the UI at ` http://localhost:5173/`.
 *Note: the command will execute* `algokit project link --all`*, which will regenerate Typescript clients used by the UI. Due to an error in generation procedure, you will get two errors:* `ERROR: Multiple exports with the same name "Struct2UInt64"`
 *and* `ERROR: The symbol "Struct2UInt64" has already been declared` *Please manually delete from* `projects/frontend/src/contracts/DelegatorContract.ts` *the double generated type and function* `Struct2UInt64` *to remove the errors reported by the UI.*
 

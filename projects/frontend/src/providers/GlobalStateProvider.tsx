@@ -1,10 +1,9 @@
 // GlobalState.tsx
 import AlgorandClient from '@algorandfoundation/algokit-utils/types/algorand-client'
-import React, { ReactNode, createContext, useContext, useState } from 'react'
+import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react'
 import { NoticeboardClient } from '../contracts/Noticeboard'
 import { NoticeboardApp, UserProfile } from '../types/types'
 import { getAlgodConfigFromViteEnvironment } from '../utils/network/getAlgoClientConfigs'
-
 // Get the app ID of the deployed Noticeboard
 import { noticeboardAppID } from '../noticeboardAppID'
 import { DEFULAT_USER_PROFILE } from '../utils/constants'
@@ -30,11 +29,20 @@ const defaultNoticeboardClient: NoticeboardClient = new NoticeboardClient(
   defaultAlgorandClient.client.algod,
 )
 
-const defaultNoticeboardInfo = await getNoticeboardInfo(defaultNoticeboardClient)
+const fetchDefaultNoticeboardInfo = async (): Promise<NoticeboardApp> => {
+  const defaultNoticeboardInfo = await getNoticeboardInfo(defaultNoticeboardClient)
+  return {
+    appId: noticeboardAppID,
+    noticeboardInfo: defaultNoticeboardInfo!,
+    client: defaultNoticeboardClient,
+    validatorList: [],
+    validators: [],
+  }
+}
 
 const defaultNoticeboardApp: NoticeboardApp = {
   appId: noticeboardAppID,
-  noticeboardInfo: defaultNoticeboardInfo!,
+  noticeboardInfo: { blockedAmt: 0n, depositDelMin: 0n, depositValMin: 0n, manager: '', valEarnFactor: 0n, valFactoryAppId: 0n },
   client: defaultNoticeboardClient,
   validatorList: [],
   validators: [],
@@ -46,6 +54,14 @@ const GlobalStateProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [userProfile, setUserProfile] = useState<UserProfile>(DEFULAT_USER_PROFILE)
   const [noticeboardApp, setNoticeboardApp] = useState<NoticeboardApp>(defaultNoticeboardApp)
   const [algorandClient, setAlgorandClient] = useState<AlgorandClient>(defaultAlgorandClient)
+
+  useEffect(() => {
+    const initializeNoticeboardApp = async () => {
+      const defaultNoticeboardApp = await fetchDefaultNoticeboardInfo()
+      setNoticeboardApp(defaultNoticeboardApp)
+    }
+    initializeNoticeboardApp()
+  }, [])
 
   return (
     <GlobalStateContext.Provider
