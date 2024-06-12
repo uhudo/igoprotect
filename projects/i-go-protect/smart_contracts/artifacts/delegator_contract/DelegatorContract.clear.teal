@@ -1,0 +1,8 @@
+#pragma version 10
+
+smart_contracts.delegator_contract.contract.DelegatorContract.clear_state_program:
+    // smart_contracts/delegator_contract/contract.py:27-28
+    // # ------- Smart contract -------
+    // class DelegatorContract(ARC4Contract):
+    int 1
+    return

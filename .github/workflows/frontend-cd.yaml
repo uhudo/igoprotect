@@ -1,0 +1,41 @@
+name: Release frontend
+
+on:
+  workflow_call:
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Vercel
+    environment: frontend-prod
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install algokit
+        run: pipx install algokit
+
+      - name: Bootstrap dependencies
+        run: algokit project bootstrap all --project-name 'frontend'
+    
+      - name: Publish to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        run: |
+          npm install --global vercel@canary
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --prod
+          vercel deploy --prebuilt --prod
+    

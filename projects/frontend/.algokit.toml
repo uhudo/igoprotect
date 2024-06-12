@@ -1,0 +1,17 @@
+[algokit]
+min_version = "v2.0.0"
+
+[project]
+type = "frontend"
+name = 'frontend'
+artifacts = "src/contracts"
+
+[project.run]
+build = { commands = ['npm run build'], description = 'Build frontend' }
+test = { commands = ['npm run test'], description = 'Run frontend tests' }
+lint = { commands = ['npm run lint'], description = 'Lint frontend code' }
+ci-deploy-vercel = { commands = [
+    'npm install --global vercel@latest',
+    'npm run ci:vercel:pull',
+    'npm run ci:vercel:deploy',
+  ], description = 'Deploy to Vercel' }

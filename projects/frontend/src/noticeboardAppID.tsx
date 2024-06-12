@@ -1,0 +1,1 @@
+export const noticeboardAppID = 1018

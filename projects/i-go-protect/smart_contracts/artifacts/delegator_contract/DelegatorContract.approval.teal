@@ -1,0 +1,1274 @@
+#pragma version 10
+
+smart_contracts.delegator_contract.contract.DelegatorContract.approval_program:
+    txn ApplicationID
+    bnz main_entrypoint@2
+    callsub __init__
+
+main_entrypoint@2:
+    // smart_contracts/delegator_contract/contract.py:27-28
+    // # ------- Smart contract -------
+    // class DelegatorContract(ARC4Contract):
+    method "create(address,uint64,uint64,uint64)void"
+    method "set_mandatory((uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64))void"
+    method "set_extra((byte[30],byte[70]))void"
+    method "deposit_keys(byte[32],byte[32],byte[64],uint64,uint64,uint64)uint64"
+    method "confirm_keys(uint64,byte[32],byte[32],byte[64],uint64,uint64,uint64)uint64"
+    method "keys_not_generated()(uint64,uint64)"
+    method "keys_not_confirmed()(uint64,uint64)"
+    method "end_contract()(uint64,uint64,uint64)"
+    method "stake_limit_breach()bool"
+    method "dereg_breach()bool"
+    txna ApplicationArgs 0
+    match main_create_route@3 main_set_mandatory_route@4 main_set_extra_route@5 main_deposit_keys_route@6 main_confirm_keys_route@7 main_keys_not_generated_route@8 main_keys_not_confirmed_route@9 main_end_contract_route@10 main_stake_limit_breach_route@11 main_dereg_breach_route@12
+    err // reject transaction
+
+main_create_route@3:
+    // smart_contracts/delegator_contract/contract.py:84
+    // @arc4.abimethod(create="require")
+    txn OnCompletion
+    !
+    assert // OnCompletion is NoOp
+    txn ApplicationID
+    !
+    assert // is creating
+    // smart_contracts/delegator_contract/contract.py:27-28
+    // # ------- Smart contract -------
+    // class DelegatorContract(ARC4Contract):
+    txna ApplicationArgs 1
+    txna ApplicationArgs 2
+    txna ApplicationArgs 3
+    txna ApplicationArgs 4
+    // smart_contracts/delegator_contract/contract.py:84
+    // @arc4.abimethod(create="require")
+    callsub create
+    int 1
+    return
+
+main_set_mandatory_route@4:
+    // smart_contracts/delegator_contract/contract.py:103
+    // @arc4.abimethod()
+    txn OnCompletion
+    !
+    assert // OnCompletion is NoOp
+    txn ApplicationID
+    assert // is not creating
+    // smart_contracts/delegator_contract/contract.py:27-28
+    // # ------- Smart contract -------
+    // class DelegatorContract(ARC4Contract):
+    txna ApplicationArgs 1
+    // smart_contracts/delegator_contract/contract.py:103
+    // @arc4.abimethod()
+    callsub set_mandatory
+    int 1
+    return
+
+main_set_extra_route@5:
+    // smart_contracts/delegator_contract/contract.py:109
+    // @arc4.abimethod()
+    txn OnCompletion
+    !
+    assert // OnCompletion is NoOp
+    txn ApplicationID
+    assert // is not creating
+    // smart_contracts/delegator_contract/contract.py:27-28
+    // # ------- Smart contract -------
+    // class DelegatorContract(ARC4Contract):
+    txna ApplicationArgs 1
+    // smart_contracts/delegator_contract/contract.py:109
+    // @arc4.abimethod()
+    callsub set_extra
+    int 1
+    return
+
+main_deposit_keys_route@6:
+    // smart_contracts/delegator_contract/contract.py:115
+    // @arc4.abimethod()
+    txn OnCompletion
+    !
+    assert // OnCompletion is NoOp
+    txn ApplicationID
+    assert // is not creating
+    // smart_contracts/delegator_contract/contract.py:27-28
+    // # ------- Smart contract -------
+    // class DelegatorContract(ARC4Contract):
+    txna ApplicationArgs 1
+    txna ApplicationArgs 2
+    txna ApplicationArgs 3
+    txna ApplicationArgs 4
+    txna ApplicationArgs 5
+    txna ApplicationArgs 6
+    // smart_contracts/delegator_contract/contract.py:115
+    // @arc4.abimethod()
+    callsub deposit_keys
+    byte 0x151f7c75
+    swap
+    concat
+    log
+    int 1
+    return
+
+main_confirm_keys_route@7:
+    // smart_contracts/delegator_contract/contract.py:142
+    // @arc4.abimethod()
+    txn OnCompletion
+    !
+    assert // OnCompletion is NoOp
+    txn ApplicationID
+    assert // is not creating
+    // smart_contracts/delegator_contract/contract.py:27-28
+    // # ------- Smart contract -------
+    // class DelegatorContract(ARC4Contract):
+    txna ApplicationArgs 1
+    txna ApplicationArgs 2
+    txna ApplicationArgs 3
+    txna ApplicationArgs 4
+    txna ApplicationArgs 5
+    txna ApplicationArgs 6
+    txna ApplicationArgs 7
+    // smart_contracts/delegator_contract/contract.py:142
+    // @arc4.abimethod()
+    callsub confirm_keys
+    byte 0x151f7c75
+    swap
+    concat
+    log
+    int 1
+    return
+
+main_keys_not_generated_route@8:
+    // smart_contracts/delegator_contract/contract.py:182
+    // @arc4.abimethod(allow_actions=["DeleteApplication"])
+    txn OnCompletion
+    int DeleteApplication
+    ==
+    assert // OnCompletion is DeleteApplication
+    txn ApplicationID
+    assert // is not creating
+    callsub keys_not_generated
+    byte 0x151f7c75
+    swap
+    concat
+    log
+    int 1
+    return
+
+main_keys_not_confirmed_route@9:
+    // smart_contracts/delegator_contract/contract.py:198
+    // @arc4.abimethod(allow_actions=["DeleteApplication"])
+    txn OnCompletion
+    int DeleteApplication
+    ==
+    assert // OnCompletion is DeleteApplication
+    txn ApplicationID
+    assert // is not creating
+    callsub keys_not_confirmed
+    byte 0x151f7c75
+    swap
+    concat
+    log
+    int 1
+    return
+
+main_end_contract_route@10:
+    // smart_contracts/delegator_contract/contract.py:217
+    // @arc4.abimethod(allow_actions=["DeleteApplication"])
+    txn OnCompletion
+    int DeleteApplication
+    ==
+    assert // OnCompletion is DeleteApplication
+    txn ApplicationID
+    assert // is not creating
+    callsub end_contract
+    byte 0x151f7c75
+    swap
+    concat
+    log
+    int 1
+    return
+
+main_stake_limit_breach_route@11:
+    // smart_contracts/delegator_contract/contract.py:253
+    // @arc4.abimethod()
+    txn OnCompletion
+    !
+    assert // OnCompletion is NoOp
+    txn ApplicationID
+    assert // is not creating
+    callsub stake_limit_breach
+    byte 0x151f7c75
+    swap
+    concat
+    log
+    int 1
+    return
+
+main_dereg_breach_route@12:
+    // smart_contracts/delegator_contract/contract.py:287
+    // @arc4.abimethod()
+    txn OnCompletion
+    !
+    assert // OnCompletion is NoOp
+    txn ApplicationID
+    assert // is not creating
+    callsub dereg_breach
+    byte 0x151f7c75
+    swap
+    concat
+    log
+    int 1
+    return
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.create(del_acc: bytes, noticeboard_app_id: bytes, round_start: bytes, round_end: bytes) -> void:
+create:
+    // smart_contracts/delegator_contract/contract.py:84-91
+    // @arc4.abimethod(create="require")
+    // def create(
+    //     self,
+    //     del_acc: arc4.Address,
+    //     noticeboard_app_id: arc4.UInt64,
+    //     round_start: arc4.UInt64,
+    //     round_end: arc4.UInt64,
+    // ) -> None:
+    proto 4 0
+    // smart_contracts/delegator_contract/contract.py:93-94
+    // # Set global variables
+    // self.del_acc = del_acc.native
+    byte "del_acc"
+    frame_dig -4
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:95
+    // self.round_start = round_start.native
+    frame_dig -2
+    btoi
+    byte "round_start"
+    swap
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:96
+    // self.round_end = round_end.native
+    frame_dig -1
+    btoi
+    byte "round_end"
+    swap
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:97
+    // self.noticeboard_app_id = noticeboard_app_id.native
+    frame_dig -3
+    btoi
+    byte "noticeboard_app_id"
+    swap
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:98
+    // self.val_app_id = Global.caller_application_id
+    byte "val_app_id"
+    global CallerApplicationID
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:100
+    // self.last_breach_round = self.round_start
+    int 0
+    byte "round_start"
+    app_global_get_ex
+    assert // check round_start exists
+    byte "last_breach_round"
+    swap
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:101
+    // return
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.set_mandatory(val_config_man: bytes) -> void:
+set_mandatory:
+    // smart_contracts/delegator_contract/contract.py:103-104
+    // @arc4.abimethod()
+    // def set_mandatory(self, val_config_man: ValConfigMan) -> None:
+    proto 1 0
+    // smart_contracts/delegator_contract/contract.py:105
+    // assert self.called_by_validator_ad(), "Not called by validator app."
+    callsub called_by_validator_ad
+    assert // Not called by validator app.
+    // smart_contracts/delegator_contract/contract.py:106
+    // self.val_config_man = val_config_man.copy()
+    byte "val_config_man"
+    frame_dig -1
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:107
+    // return
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.called_by_validator_ad() -> uint64:
+called_by_validator_ad:
+    // smart_contracts/delegator_contract/contract.py:313-317
+    // # ----- ----- ----- ------------------ ----- ----- -----
+    // # ----- ----- ----- Internal functions ----- ----- -----
+    // # ----- ----- ----- ------------------ ----- ----- -----
+    // @subroutine
+    // def called_by_validator_ad(self) -> bool:
+    proto 0 1
+    // smart_contracts/delegator_contract/contract.py:318
+    // return Global.caller_application_id == self.val_app_id
+    global CallerApplicationID
+    int 0
+    byte "val_app_id"
+    app_global_get_ex
+    assert // check val_app_id exists
+    ==
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.set_extra(val_config_extra: bytes) -> void:
+set_extra:
+    // smart_contracts/delegator_contract/contract.py:109-110
+    // @arc4.abimethod()
+    // def set_extra(self, val_config_extra: ValConfigExtra) -> None:
+    proto 1 0
+    // smart_contracts/delegator_contract/contract.py:111
+    // assert self.called_by_validator_ad(), "Not called by validator app."
+    callsub called_by_validator_ad
+    assert // Not called by validator app.
+    // smart_contracts/delegator_contract/contract.py:112
+    // self.val_config_extra = val_config_extra.copy()
+    byte "val_config_extra"
+    frame_dig -1
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:113
+    // return
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.deposit_keys(sel_key: bytes, vote_key: bytes, state_proof_key: bytes, vote_key_dilution: bytes, round_start: bytes, round_end: bytes) -> bytes:
+deposit_keys:
+    // smart_contracts/delegator_contract/contract.py:115-124
+    // @arc4.abimethod()
+    // def deposit_keys(
+    //     self,
+    //     sel_key: SelKey,
+    //     vote_key: VoteKey,
+    //     state_proof_key: StateProofKey,
+    //     vote_key_dilution: arc4.UInt64,
+    //     round_start: arc4.UInt64,
+    //     round_end: arc4.UInt64,
+    // ) -> arc4.UInt64:
+    proto 6 1
+    // smart_contracts/delegator_contract/contract.py:126
+    // assert self.called_by_validator_ad(), "Not called by validator app."
+    callsub called_by_validator_ad
+    assert // Not called by validator app.
+    // smart_contracts/delegator_contract/contract.py:127
+    // assert self.part_keys_deposited == False, "Keys can be set only once."
+    int 0
+    byte "part_keys_deposited"
+    app_global_get_ex
+    assert // check part_keys_deposited exists
+    !
+    assert // Keys can be set only once.
+    // smart_contracts/delegator_contract/contract.py:129
+    // assert self.round_start == round_start, "Start round isn't as agreed."
+    int 0
+    byte "round_start"
+    app_global_get_ex
+    assert // check round_start exists
+    itob
+    frame_dig -2
+    b==
+    assert // Start round isn't as agreed.
+    // smart_contracts/delegator_contract/contract.py:130
+    // assert self.round_end == round_end, "End round isn't as agreed."
+    int 0
+    byte "round_end"
+    app_global_get_ex
+    assert // check round_end exists
+    itob
+    frame_dig -1
+    b==
+    assert // End round isn't as agreed.
+    // smart_contracts/delegator_contract/contract.py:132
+    // self.vote_key_dilution = vote_key_dilution.native
+    frame_dig -3
+    btoi
+    byte "vote_key_dilution"
+    swap
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:133
+    // self.sel_key = sel_key.copy()
+    byte "sel_key"
+    frame_dig -6
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:134
+    // self.vote_key = vote_key.copy()
+    byte "vote_key"
+    frame_dig -5
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:135
+    // self.state_proof_key = state_proof_key.copy()
+    byte "state_proof_key"
+    frame_dig -4
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:137
+    // self.part_keys_deposited = True
+    byte "part_keys_deposited"
+    int 1
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:139-140
+    // # Return the agreed fee for setting up the validator
+    // return self.val_config_man.fee_setup
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 24 8
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.confirm_keys(fee_operation_payment_amount: bytes, sel_key: bytes, vote_key: bytes, state_proof_key: bytes, vote_key_dilution: bytes, round_start: bytes, round_end: bytes) -> bytes:
+confirm_keys:
+    // smart_contracts/delegator_contract/contract.py:142-152
+    // @arc4.abimethod()
+    // def confirm_keys(
+    //     self,
+    //     fee_operation_payment_amount: arc4.UInt64,
+    //     sel_key: SelKey,
+    //     vote_key: VoteKey,
+    //     state_proof_key: StateProofKey,
+    //     vote_key_dilution: arc4.UInt64,
+    //     round_start: arc4.UInt64,
+    //     round_end: arc4.UInt64,
+    // ) -> arc4.UInt64:
+    proto 7 1
+    // smart_contracts/delegator_contract/contract.py:154
+    // assert self.called_by_validator_ad(), "Not called by validator app."
+    callsub called_by_validator_ad
+    assert // Not called by validator app.
+    // smart_contracts/delegator_contract/contract.py:157
+    // self.part_keys_deposited == True
+    int 0
+    byte "part_keys_deposited"
+    app_global_get_ex
+    assert // check part_keys_deposited exists
+    int 1
+    ==
+    // smart_contracts/delegator_contract/contract.py:156-158
+    // assert (
+    //     self.part_keys_deposited == True
+    // ), "Keys can't be accepted if they haven't been deposited."
+    assert // Keys can't be accepted if they haven't been deposited.
+    // smart_contracts/delegator_contract/contract.py:161
+    // self.round_start < Global.round
+    int 0
+    byte "round_start"
+    app_global_get_ex
+    assert // check round_start exists
+    global Round
+    <
+    // smart_contracts/delegator_contract/contract.py:160-162
+    // assert (
+    //     self.round_start < Global.round
+    // ), "Keys can't be confirmed for future (requirement of consensus protocol)."
+    assert // Keys can't be confirmed for future (requirement of consensus protocol).
+    // smart_contracts/delegator_contract/contract.py:164-165
+    // # Check if key reg parameters are the same as were deposited
+    // assert sel_key == self.sel_key, "Selection key"
+    int 0
+    byte "sel_key"
+    app_global_get_ex
+    assert // check sel_key exists
+    frame_dig -6
+    ==
+    assert // Selection key
+    // smart_contracts/delegator_contract/contract.py:166
+    // assert vote_key == self.vote_key, "Vote key"
+    int 0
+    byte "vote_key"
+    app_global_get_ex
+    assert // check vote_key exists
+    frame_dig -5
+    ==
+    assert // Vote key
+    // smart_contracts/delegator_contract/contract.py:167
+    // assert state_proof_key == self.state_proof_key, "State proof key"
+    int 0
+    byte "state_proof_key"
+    app_global_get_ex
+    assert // check state_proof_key exists
+    frame_dig -4
+    ==
+    assert // State proof key
+    // smart_contracts/delegator_contract/contract.py:168
+    // assert vote_key_dilution == self.vote_key_dilution, "Vote key dilution"
+    int 0
+    byte "vote_key_dilution"
+    app_global_get_ex
+    assert // check vote_key_dilution exists
+    itob
+    frame_dig -3
+    b==
+    assert // Vote key dilution
+    // smart_contracts/delegator_contract/contract.py:169
+    // assert round_start == self.round_start, "Round start"
+    int 0
+    byte "round_start"
+    app_global_get_ex
+    assert // check round_start exists
+    itob
+    frame_dig -2
+    b==
+    assert // Round start
+    // smart_contracts/delegator_contract/contract.py:170
+    // assert round_end == self.round_end, "Round end"
+    int 0
+    byte "round_end"
+    app_global_get_ex
+    assert // check round_end exists
+    itob
+    frame_dig -1
+    b==
+    assert // Round end
+    // smart_contracts/delegator_contract/contract.py:172-173
+    // # Assert correct amount of operational fee was paid to the noticeboard (receiver checked in Noticeboard)
+    // assert fee_operation_payment_amount == self.val_config_man.fee_round.native * (
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 32 8
+    btoi
+    // smart_contracts/delegator_contract/contract.py:174
+    // self.round_end - self.round_start
+    int 0
+    byte "round_end"
+    app_global_get_ex
+    assert // check round_end exists
+    int 0
+    byte "round_start"
+    app_global_get_ex
+    assert // check round_start exists
+    -
+    // smart_contracts/delegator_contract/contract.py:172-175
+    // # Assert correct amount of operational fee was paid to the noticeboard (receiver checked in Noticeboard)
+    // assert fee_operation_payment_amount == self.val_config_man.fee_round.native * (
+    //     self.round_end - self.round_start
+    // ), "Operational fee was insufficient."
+    *
+    itob
+    frame_dig -7
+    b==
+    assert // Operational fee was insufficient.
+    // smart_contracts/delegator_contract/contract.py:177
+    // self.keys_confirmed = True
+    byte "keys_confirmed"
+    int 1
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:179-180
+    // # Return earned agreed setup fee
+    // return self.val_config_man.fee_setup
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 24 8
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.keys_not_generated() -> bytes:
+keys_not_generated:
+    // smart_contracts/delegator_contract/contract.py:182-183
+    // @arc4.abimethod(allow_actions=["DeleteApplication"])
+    // def keys_not_generated(self) -> Struct2UInt64:
+    proto 0 1
+    // smart_contracts/delegator_contract/contract.py:184
+    // assert self.called_by_validator_ad(), "Not called by validator app."
+    callsub called_by_validator_ad
+    assert // Not called by validator app.
+    // smart_contracts/delegator_contract/contract.py:186
+    // assert not self.part_keys_deposited, "Keys were deposited."
+    int 0
+    byte "part_keys_deposited"
+    app_global_get_ex
+    assert // check part_keys_deposited exists
+    !
+    assert // Keys were deposited.
+    // smart_contracts/delegator_contract/contract.py:189
+    // Global.round > self.round_start + self.val_config_man.setup_rounds.native
+    global Round
+    int 0
+    byte "round_start"
+    app_global_get_ex
+    assert // check round_start exists
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 48 8
+    btoi
+    +
+    >
+    // smart_contracts/delegator_contract/contract.py:188-190
+    // assert (
+    //     Global.round > self.round_start + self.val_config_man.setup_rounds.native
+    // ), "Only if enough time has passed since contract start, can it be claimed that keys haven't been generated."
+    assert // Only if enough time has passed since contract start, can it be claimed that keys haven't been generated.
+    // smart_contracts/delegator_contract/contract.py:194
+    // self.val_config_man.deposit,
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 40 8
+    // smart_contracts/delegator_contract/contract.py:195
+    // self.val_config_man.fee_setup,
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 24 8
+    // smart_contracts/delegator_contract/contract.py:192-196
+    // # Return agreed deposit and setup fee
+    // return Struct2UInt64(
+    //     self.val_config_man.deposit,
+    //     self.val_config_man.fee_setup,
+    // )
+    concat
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.keys_not_confirmed() -> bytes:
+keys_not_confirmed:
+    // smart_contracts/delegator_contract/contract.py:198-199
+    // @arc4.abimethod(allow_actions=["DeleteApplication"])
+    // def keys_not_confirmed(self) -> Struct2UInt64:
+    proto 0 1
+    // smart_contracts/delegator_contract/contract.py:200
+    // assert self.called_by_validator_ad(), "Not called by validator app."
+    callsub called_by_validator_ad
+    assert // Not called by validator app.
+    // smart_contracts/delegator_contract/contract.py:202
+    // assert not self.keys_confirmed, "Keys haven't been confirmed."
+    int 0
+    byte "keys_confirmed"
+    app_global_get_ex
+    assert // check keys_confirmed exists
+    !
+    assert // Keys haven't been confirmed.
+    // smart_contracts/delegator_contract/contract.py:205
+    // Global.round
+    global Round
+    // smart_contracts/delegator_contract/contract.py:206
+    // > self.round_start
+    int 0
+    byte "round_start"
+    app_global_get_ex
+    assert // check round_start exists
+    // smart_contracts/delegator_contract/contract.py:207
+    // + self.val_config_man.setup_rounds.native
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 48 8
+    btoi
+    // smart_contracts/delegator_contract/contract.py:206-207
+    // > self.round_start
+    // + self.val_config_man.setup_rounds.native
+    +
+    // smart_contracts/delegator_contract/contract.py:208
+    // + self.val_config_man.confirmation_rounds.native
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 56 8
+    btoi
+    // smart_contracts/delegator_contract/contract.py:206-208
+    // > self.round_start
+    // + self.val_config_man.setup_rounds.native
+    // + self.val_config_man.confirmation_rounds.native
+    +
+    // smart_contracts/delegator_contract/contract.py:205-208
+    // Global.round
+    // > self.round_start
+    // + self.val_config_man.setup_rounds.native
+    // + self.val_config_man.confirmation_rounds.native
+    >
+    // smart_contracts/delegator_contract/contract.py:204-209
+    // assert (
+    //     Global.round
+    //     > self.round_start
+    //     + self.val_config_man.setup_rounds.native
+    //     + self.val_config_man.confirmation_rounds.native
+    // ), "Only if enough time has passed since contract start, can it be claimed that keys haven't been confirmed."
+    assert // Only if enough time has passed since contract start, can it be claimed that keys haven't been confirmed.
+    // smart_contracts/delegator_contract/contract.py:213
+    // self.val_config_man.deposit,
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 40 8
+    // smart_contracts/delegator_contract/contract.py:214
+    // self.val_config_man.fee_setup,
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 24 8
+    // smart_contracts/delegator_contract/contract.py:211-215
+    // # Return agreed deposit and setup fee
+    // return Struct2UInt64(
+    //     self.val_config_man.deposit,
+    //     self.val_config_man.fee_setup,
+    // )
+    concat
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.end_contract() -> bytes:
+end_contract:
+    // smart_contracts/delegator_contract/contract.py:217-218
+    // @arc4.abimethod(allow_actions=["DeleteApplication"])
+    // def end_contract(self) -> Struct3UInt64:
+    proto 0 1
+    byte ""
+    dupn 4
+    // smart_contracts/delegator_contract/contract.py:219
+    // assert self.called_by_validator_ad(), "Not called by validator app."
+    callsub called_by_validator_ad
+    assert // Not called by validator app.
+    // smart_contracts/delegator_contract/contract.py:222
+    // self.part_keys_deposited
+    int 0
+    byte "part_keys_deposited"
+    app_global_get_ex
+    assert // check part_keys_deposited exists
+    // smart_contracts/delegator_contract/contract.py:221-223
+    // assert (
+    //     self.part_keys_deposited
+    // ), "Can't end contract this way if keys haven't yet been deposited."
+    assert // Can't end contract this way if keys haven't yet been deposited.
+    // smart_contracts/delegator_contract/contract.py:225
+    // assert self.keys_confirmed, "Can't end contract if keys haven't been confirmed."
+    int 0
+    byte "keys_confirmed"
+    app_global_get_ex
+    assert // check keys_confirmed exists
+    assert // Can't end contract if keys haven't been confirmed.
+    // smart_contracts/delegator_contract/contract.py:227-228
+    // # Calculate any refund amount and validator earnings
+    // if Global.round > self.round_end:
+    global Round
+    int 0
+    byte "round_end"
+    app_global_get_ex
+    assert // check round_end exists
+    >
+    bz end_contract_else_body@2
+    // smart_contracts/delegator_contract/contract.py:229-230
+    // # Contract has successfully ended
+    // rounds_remain = UInt64(0)
+    int 0
+    b end_contract_after_if_else@3
+
+end_contract_else_body@2:
+    // smart_contracts/delegator_contract/contract.py:232-233
+    // # Contract has prematurely ended
+    // rounds_remain = self.round_end - Global.round
+    int 0
+    byte "round_end"
+    app_global_get_ex
+    assert // check round_end exists
+    global Round
+    -
+
+end_contract_after_if_else@3:
+    // smart_contracts/delegator_contract/contract.py:235
+    // deposit = self.val_config_man.deposit.native
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 40 8
+    btoi
+    dup
+    frame_bury 0
+    // smart_contracts/delegator_contract/contract.py:236
+    // refund_amount = self.val_config_man.fee_round.native * rounds_remain
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 32 8
+    btoi
+    uncover 2
+    dup
+    cover 2
+    *
+    frame_bury 2
+    // smart_contracts/delegator_contract/contract.py:237
+    // validator_earns = self.val_config_man.fee_round.native * (
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 32 8
+    btoi
+    // smart_contracts/delegator_contract/contract.py:238
+    // self.round_end - self.round_start - rounds_remain
+    int 0
+    byte "round_end"
+    app_global_get_ex
+    assert // check round_end exists
+    int 0
+    byte "round_start"
+    app_global_get_ex
+    assert // check round_start exists
+    -
+    uncover 2
+    -
+    // smart_contracts/delegator_contract/contract.py:237-239
+    // validator_earns = self.val_config_man.fee_round.native * (
+    //     self.round_end - self.round_start - rounds_remain
+    // )
+    *
+    dup
+    frame_bury 3
+    // smart_contracts/delegator_contract/contract.py:241-242
+    // # If contract was breached,  the validator gets also the deposit
+    // if self.contract_breached:
+    int 0
+    byte "contract_breached"
+    app_global_get_ex
+    assert // check contract_breached exists
+    swap
+    frame_bury 4
+    swap
+    frame_bury 1
+    bz end_contract_after_if_else@5
+    // smart_contracts/delegator_contract/contract.py:243
+    // validator_earns += deposit
+    frame_dig 3
+    frame_dig 0
+    +
+    // smart_contracts/delegator_contract/contract.py:244
+    // deposit = UInt64(0)
+    int 0
+    frame_bury 1
+    frame_bury 4
+
+end_contract_after_if_else@5:
+    frame_dig 4
+    frame_dig 1
+    // smart_contracts/delegator_contract/contract.py:248
+    // arc4.UInt64(deposit),
+    itob
+    // smart_contracts/delegator_contract/contract.py:249
+    // arc4.UInt64(refund_amount),
+    frame_dig 2
+    itob
+    // smart_contracts/delegator_contract/contract.py:250
+    // arc4.UInt64(validator_earns),
+    uncover 2
+    itob
+    swap
+    // smart_contracts/delegator_contract/contract.py:246-251
+    // # Return agreed deposit, unused operational fee, and used operational fee (i.e. validator earning)
+    // return Struct3UInt64(
+    //     arc4.UInt64(deposit),
+    //     arc4.UInt64(refund_amount),
+    //     arc4.UInt64(validator_earns),
+    // )
+    uncover 2
+    swap
+    concat
+    swap
+    concat
+    frame_bury 0
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.stake_limit_breach() -> bytes:
+stake_limit_breach:
+    // smart_contracts/delegator_contract/contract.py:253-256
+    // @arc4.abimethod()
+    // def stake_limit_breach(
+    //     self,
+    // ) -> arc4.Bool:
+    proto 0 1
+    byte ""
+    // smart_contracts/delegator_contract/contract.py:260
+    // not self.contract_breached
+    int 0
+    byte "contract_breached"
+    app_global_get_ex
+    assert // check contract_breached exists
+    !
+    // smart_contracts/delegator_contract/contract.py:259-261
+    // assert (
+    //     not self.contract_breached
+    // ), "No need to store further breaches if contract has already been breached."
+    assert // No need to store further breaches if contract has already been breached.
+    // smart_contracts/delegator_contract/contract.py:264
+    // self.keys_confirmed
+    int 0
+    byte "keys_confirmed"
+    app_global_get_ex
+    assert // check keys_confirmed exists
+    // smart_contracts/delegator_contract/contract.py:263-265
+    // assert (
+    //     self.keys_confirmed
+    // ), "Keys need to be confirmed before tracking of breaches is enabled."
+    assert // Keys need to be confirmed before tracking of breaches is enabled.
+    // smart_contracts/delegator_contract/contract.py:268
+    // self.val_config_man.breach_rounds.native + self.last_breach_round
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 72 8
+    btoi
+    int 0
+    byte "last_breach_round"
+    app_global_get_ex
+    assert // check last_breach_round exists
+    +
+    // smart_contracts/delegator_contract/contract.py:269
+    // < Global.round
+    global Round
+    // smart_contracts/delegator_contract/contract.py:268-269
+    // self.val_config_man.breach_rounds.native + self.last_breach_round
+    // < Global.round
+    <
+    // smart_contracts/delegator_contract/contract.py:267-270
+    // assert (
+    //     self.val_config_man.breach_rounds.native + self.last_breach_round
+    //     < Global.round
+    // ), "Check if more than agreed number of rounds has passed since last breach."
+    assert // Check if more than agreed number of rounds has passed since last breach.
+    // smart_contracts/delegator_contract/contract.py:273
+    // self.del_acc.balance > self.val_config_man.max_amt
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 16 8
+    int 0
+    byte "del_acc"
+    app_global_get_ex
+    assert // check del_acc exists
+    acct_params_get AcctBalance
+    assert // account funded
+    itob
+    b<
+    // smart_contracts/delegator_contract/contract.py:273-274
+    // self.del_acc.balance > self.val_config_man.max_amt
+    // or self.del_acc.balance < self.val_config_man.min_amt
+    bnz stake_limit_breach_bool_true@2
+    // smart_contracts/delegator_contract/contract.py:274
+    // or self.del_acc.balance < self.val_config_man.min_amt
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 8 8
+    int 0
+    byte "del_acc"
+    app_global_get_ex
+    assert // check del_acc exists
+    acct_params_get AcctBalance
+    assert // account funded
+    itob
+    b>
+    // smart_contracts/delegator_contract/contract.py:273-274
+    // self.del_acc.balance > self.val_config_man.max_amt
+    // or self.del_acc.balance < self.val_config_man.min_amt
+    bz stake_limit_breach_bool_false@3
+
+stake_limit_breach_bool_true@2:
+    int 1
+    b stake_limit_breach_bool_merge@4
+
+stake_limit_breach_bool_false@3:
+    int 0
+
+stake_limit_breach_bool_merge@4:
+    // smart_contracts/delegator_contract/contract.py:272-275
+    // assert (
+    //     self.del_acc.balance > self.val_config_man.max_amt
+    //     or self.del_acc.balance < self.val_config_man.min_amt
+    // ), "Delegator account balance is outside of agreed limits."
+    assert // Delegator account balance is outside of agreed limits.
+    // smart_contracts/delegator_contract/contract.py:278
+    // self.round_start < Global.round < self.round_end
+    int 0
+    byte "round_start"
+    app_global_get_ex
+    assert // check round_start exists
+    global Round
+    dup
+    frame_bury 0
+    <
+    bz stake_limit_breach_bool_false@7
+    int 0
+    byte "round_end"
+    app_global_get_ex
+    assert // check round_end exists
+    frame_dig 0
+    >
+    bz stake_limit_breach_bool_false@7
+    int 1
+    b stake_limit_breach_bool_merge@8
+
+stake_limit_breach_bool_false@7:
+    int 0
+
+stake_limit_breach_bool_merge@8:
+    // smart_contracts/delegator_contract/contract.py:277-279
+    // assert (
+    //     self.round_start < Global.round < self.round_end
+    // ), "Breaching is relevant only inside contract validity."
+    assert // Breaching is relevant only inside contract validity.
+    // smart_contracts/delegator_contract/contract.py:281
+    // self.num_breach += 1
+    int 0
+    byte "num_breach"
+    app_global_get_ex
+    assert // check num_breach exists
+    int 1
+    +
+    byte "num_breach"
+    swap
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:282
+    // self.contract_breached = self.num_breach >= self.val_config_man.max_breach
+    int 0
+    byte "val_config_man"
+    app_global_get_ex
+    assert // check val_config_man exists
+    extract 64 8
+    int 0
+    byte "num_breach"
+    app_global_get_ex
+    assert // check num_breach exists
+    itob
+    b<=
+    byte "contract_breached"
+    swap
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:283
+    // self.last_breach_round = Global.round
+    byte "last_breach_round"
+    global Round
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:285
+    // return arc4.Bool(self.contract_breached)
+    int 0
+    byte "contract_breached"
+    app_global_get_ex
+    assert // check contract_breached exists
+    byte 0x00
+    int 0
+    uncover 2
+    setbit
+    swap
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.dereg_breach() -> bytes:
+dereg_breach:
+    // smart_contracts/delegator_contract/contract.py:287-290
+    // @arc4.abimethod()
+    // def dereg_breach(
+    //     self,
+    // ) -> arc4.Bool:
+    proto 0 1
+    // smart_contracts/delegator_contract/contract.py:295
+    // assert self.called_by_validator_ad(), "Not called by validator app."
+    callsub called_by_validator_ad
+    assert // Not called by validator app.
+    // smart_contracts/delegator_contract/contract.py:297
+    // assert not self.contract_breached, "Already has been breached."
+    int 0
+    byte "contract_breached"
+    app_global_get_ex
+    assert // check contract_breached exists
+    !
+    assert // Already has been breached.
+    // smart_contracts/delegator_contract/contract.py:300
+    // self.keys_confirmed
+    int 0
+    byte "keys_confirmed"
+    app_global_get_ex
+    assert // check keys_confirmed exists
+    // smart_contracts/delegator_contract/contract.py:299-301
+    // assert (
+    //     self.keys_confirmed
+    // ), "Keys need to be confirmed before tracking of breaches is enabled."
+    assert // Keys need to be confirmed before tracking of breaches is enabled.
+    // smart_contracts/delegator_contract/contract.py:304
+    // self.val_app_id, Bytes(b"manager")
+    int 0
+    byte "val_app_id"
+    app_global_get_ex
+    assert // check val_app_id exists
+    byte "manager"
+    // smart_contracts/delegator_contract/contract.py:303-305
+    // val_mng, val_mng_exist = op.AppGlobal.get_ex_bytes(
+    //     self.val_app_id, Bytes(b"manager")
+    // )
+    app_global_get_ex
+    // smart_contracts/delegator_contract/contract.py:306
+    // assert val_mng_exist, "Vlidator contract has manager."
+    assert // Vlidator contract has manager.
+    // smart_contracts/delegator_contract/contract.py:307
+    // assert Txn.sender == Account(val_mng), "Manager called brecah key dereg."
+    txn Sender
+    swap
+    dup
+    len
+    int 32
+    ==
+    assert // Address length is 32 bytes
+    ==
+    assert // Manager called brecah key dereg.
+    // smart_contracts/delegator_contract/contract.py:309
+    // self.contract_breached = True
+    byte "contract_breached"
+    int 1
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:311
+    // return arc4.Bool(self.contract_breached)
+    int 0
+    byte "contract_breached"
+    app_global_get_ex
+    assert // check contract_breached exists
+    byte 0x00
+    int 0
+    uncover 2
+    setbit
+    retsub
+
+
+// smart_contracts.delegator_contract.contract.DelegatorContract.__init__() -> void:
+__init__:
+    // smart_contracts/delegator_contract/contract.py:48
+    // def __init__(self) -> None:
+    proto 0 0
+    // smart_contracts/delegator_contract/contract.py:49-50
+    // # Define global state
+    // self.noticeboard_app_id = UInt64(0)
+    byte "noticeboard_app_id"
+    int 0
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:51
+    // self.val_app_id = UInt64(0)
+    byte "val_app_id"
+    int 0
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:52
+    // self.del_acc = Global.zero_address
+    byte "del_acc"
+    global ZeroAddress
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:53
+    // self.val_config_man = ValConfigMan(
+    byte "val_config_man"
+    // smart_contracts/delegator_contract/contract.py:53-65
+    // self.val_config_man = ValConfigMan(
+    //     arc4.UInt64(0),
+    //     arc4.UInt64(0),
+    //     arc4.UInt64(0),
+    //     arc4.UInt64(0),
+    //     arc4.UInt64(0),
+    //     arc4.UInt64(0),
+    //     arc4.UInt64(0),
+    //     arc4.UInt64(0),
+    //     arc4.UInt64(0),
+    //     arc4.UInt64(0),
+    //     arc4.UInt64(0),
+    // )
+    byte 0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:67
+    // ValName.from_bytes(op.bzero(30)),
+    int 30
+    bzero
+    // smart_contracts/delegator_contract/contract.py:68
+    // ValLink.from_bytes(op.bzero(70)),
+    int 70
+    bzero
+    // smart_contracts/delegator_contract/contract.py:66-69
+    // self.val_config_extra = ValConfigExtra(
+    //     ValName.from_bytes(op.bzero(30)),
+    //     ValLink.from_bytes(op.bzero(70)),
+    // )
+    concat
+    // smart_contracts/delegator_contract/contract.py:66
+    // self.val_config_extra = ValConfigExtra(
+    byte "val_config_extra"
+    // smart_contracts/delegator_contract/contract.py:66-69
+    // self.val_config_extra = ValConfigExtra(
+    //     ValName.from_bytes(op.bzero(30)),
+    //     ValLink.from_bytes(op.bzero(70)),
+    // )
+    swap
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:70
+    // self.round_start = UInt64(0)
+    byte "round_start"
+    int 0
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:71
+    // self.round_end = UInt64(0)
+    byte "round_end"
+    int 0
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:72
+    // self.vote_key_dilution = UInt64(0)
+    byte "vote_key_dilution"
+    int 0
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:73
+    // self.sel_key = SelKey.from_bytes(op.bzero(32))
+    int 32
+    bzero
+    byte "sel_key"
+    dig 1
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:74
+    // self.vote_key = VoteKey.from_bytes(op.bzero(32))
+    byte "vote_key"
+    swap
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:75
+    // self.state_proof_key = StateProofKey.from_bytes(op.bzero(64))
+    int 64
+    bzero
+    byte "state_proof_key"
+    swap
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:77
+    // self.part_keys_deposited = False
+    byte "part_keys_deposited"
+    int 0
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:78
+    // self.keys_confirmed = False
+    byte "keys_confirmed"
+    int 0
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:80
+    // self.num_breach = UInt64(0)
+    byte "num_breach"
+    int 0
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:81
+    // self.last_breach_round = UInt64(0)
+    byte "last_breach_round"
+    int 0
+    app_global_put
+    // smart_contracts/delegator_contract/contract.py:82
+    // self.contract_breached = False
+    byte "contract_breached"
+    int 0
+    app_global_put
+    retsub

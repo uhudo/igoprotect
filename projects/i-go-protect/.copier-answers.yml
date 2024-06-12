@@ -1,0 +1,10 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: 1.0.10
+_src_path: gh:algorandfoundation/algokit-python-template
+author_email: uhudomalj@ethz.ch
+author_name: Uroš Hudomalj
+contract_name: noticeboard
+deployment_language: python
+preset_name: production
+project_name: i-go-protect
+

@@ -1,0 +1,8 @@
+#pragma version 10
+
+smart_contracts.noticeboard.contract.Noticeboard.clear_state_program:
+    // smart_contracts/noticeboard/contract.py:43-44
+    // # ------- Smart contract -------
+    // class Noticeboard(ARC4Contract):
+    int 1
+    return

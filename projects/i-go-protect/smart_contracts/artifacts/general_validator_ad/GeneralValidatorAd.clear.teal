@@ -1,0 +1,8 @@
+#pragma version 10
+
+smart_contracts.general_validator_ad.contract.GeneralValidatorAd.clear_state_program:
+    // smart_contracts/general_validator_ad/contract.py:49-50
+    // # ------- Smart contract -------
+    // class GeneralValidatorAd(ARC4Contract):
+    int 1
+    return
