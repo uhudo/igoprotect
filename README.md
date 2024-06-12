@@ -158,7 +158,7 @@ This section provides instructions for deploying the platform on AlgoKit localne
 3) Install all dependencies: `algokit project bootstrap all`
 4) Start localnet: `algokit localnet start`
 5) Deploy a new instance of the platform: `algokit project deploy localnet`
-6) Navigate to `frontend` directory `cd projects/frontent` and start the UI by running `npm run dev`. You can access the UI at ` http://localhost:5173/`.
+6) Navigate to `frontend` directory `cd projects/frontend` and start the UI by running `npm run dev`. You can access the UI at ` http://localhost:5173/`.
 *Note: the command will execute* `algokit project link --all`*, which will regenerate Typescript clients used by the UI. Due to an error in generation procedure, you will get two errors:* `ERROR: Multiple exports with the same name "Struct2UInt64"`
 *and* `ERROR: The symbol "Struct2UInt64" has already been declared` *Please manually delete from* `projects/frontend/src/contracts/DelegatorContract.ts` *the double generated type and function* `Struct2UInt64` *to remove the errors reported by the UI.*
 
