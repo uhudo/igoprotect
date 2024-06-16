@@ -7,7 +7,7 @@ The platform can be accessed on Testnet at: [https://igoprotect.vercel.app/](htt
 This README provides an overview of the platform, instructions for its use, and deployment in a local environment.
 
 The project was developed using [AlgoKit](https://developer.algorand.org/algokit/).
-The smart contract have been written in [Algorand Python](https://github.com/algorandfoundation/puya).
+The smart contracts have been written in [Algorand Python](https://github.com/algorandfoundation/puya).
 The frontend has been written in React.js Typescript with Tailwind CSS.
 
 ## Overview
@@ -15,6 +15,8 @@ The frontend has been written in React.js Typescript with Tailwind CSS.
 The goal of this project is to improve the decentralization and security of the Algorand blockchain by increasing the number of nodes and the percentage of the online stake that participates in its consensus.
 To achieve this goal, the developed platform serves as a decentralized system for connecting users to node runners to enable their simple participation in the network's consensus.
 This is achieved via delegation of users' ALGO stakes to the node runners' nodes.
+
+![overview of IgoProtect](./overview_igoprotect.png)
 
 ### The Approach and its Benefits
 The IgoProtect platform takes advantage of the native delegation ability of the Algorand protocol that separates user's private keys, which are used to sign transactions, and [participation keys](https://developer.algorand.org/docs/get-details/algorand_consensus/#participation-keys), which are used for participation in the network's consensus.
@@ -89,6 +91,8 @@ Since the users' funds never leave their wallets for participation in consensus 
 Similarly, the node runners need to be held accountable to provide the agreed quality of the service to their users.
 The deposits will be seized in case of detected malicious behaviour.
 The process is fully auditable, automatic, and transparent.
+Validator can require larger deposits than required by the platform.
+The platform currently sets a minimum deposit of 0.1 ALGO.
 
 #### Business Model
 For sustaining the operation of the platform, it deducts a fixed percentage of the fees charged by the node runners.

@@ -8,13 +8,11 @@ import base64
 import numpy as np
 import pandas as pd
 from algosdk.transaction import SuggestedParams
-from algosdk.encoding import encode_address
-from algosdk.atomic_transaction_composer import AccountTransactionSigner
 from algokit_utils import TransactionParameters
 from algokit_utils.beta.algorand_client import AlgorandClient
 from algokit_utils.beta.account_manager import AddressAndSigner
 
-from NoticeboardClient import NoticeboardClient
+from .NoticeboardClient import NoticeboardClient
 
 
 
@@ -28,7 +26,7 @@ class ParticipationKey:
     round_end: int          # Take from delegator contract
 
 
- 
+
 def run_cmd_command_and_wait_for_output(
     logger: object,
     command_args: List[str]
@@ -62,7 +60,7 @@ def run_cmd_command_and_wait_for_output(
 
 
 class PartkeyFetcher(object):
-    
+
     def __init__(
             self,
             logger: object
@@ -76,7 +74,7 @@ class PartkeyFetcher(object):
         pass
 
     def get_partkey_details(
-        self, 
+        self,
         partkey_id: int
     ) -> ParticipationKey:
         """Get the participation key details.
@@ -144,7 +142,7 @@ class PartkeyFetcherGoal(PartkeyFetcher):
 
 
     def get_partkey_details(
-        self, 
+        self,
         partkey_id: int,
         refresh_table: bool = True
     ) -> ParticipationKey:
@@ -178,7 +176,7 @@ class PartkeyFetcherGoal(PartkeyFetcher):
             round_end=int(row['last_round'].values[0])
         )
         return partkey
-    
+
 
     def get_partkey_id_from_acc(
         self,
@@ -217,7 +215,7 @@ class PartkeyFetcherGoal(PartkeyFetcher):
         if list_cmd_validity and info_cmd_validity:
             # Keep the worker function separate for easier testing
             self.partkey_table = self._make_partkey_table_from_stdout(
-                list_cmd_result, 
+                list_cmd_result,
                 info_cmd_result
             )
             return self.partkey_table
@@ -237,8 +235,8 @@ class PartkeyFetcherGoal(PartkeyFetcher):
 
 
     def _make_partkey_table_from_stdout(
-            self, 
-            list_cmd_result: str, 
+            self,
+            list_cmd_result: str,
             info_cmd_result: str
         ) -> pd.DataFrame:
         """Get the participation keys from the `partkeyinfo` STDOUT.
@@ -263,7 +261,7 @@ class PartkeyFetcherGoal(PartkeyFetcher):
 
 
     def _get_number_if_partkeys_from_listpartkeys_stdout(
-            self, 
+            self,
             list_cmd_result: str
         ) -> int:
         """Count the number of partkeys from the `listpartkeys` command.
@@ -285,7 +283,7 @@ class PartkeyFetcherGoal(PartkeyFetcher):
 
 
     def _filter_partkeys_from_partkeyinfo_stdout(
-            self, 
+            self,
             info_cmd_result: str
         ) -> List[List[str]]:
         """Generate a list, containing a nested list of lines associated with an individual partkey.
@@ -340,7 +338,7 @@ class PartkeyFetcherGoal(PartkeyFetcher):
 
 
     def _is_there_a_leading_space_in_partkeyinfo(
-            self, 
+            self,
             info_cmd_result: str
         ) -> bool:
         """Check if a space preceeds the key information provided by `partkeyinfo`.
@@ -361,8 +359,8 @@ class PartkeyFetcherGoal(PartkeyFetcher):
             return None
 
 
-    def _remove_leading_space_from_raw_partkey_rows( 
-            self, 
+    def _remove_leading_space_from_raw_partkey_rows(
+            self,
             partkey_list_raw: List[List[str]]
         ) -> List[List[str]]:
         """Remove the leading space for each row.
@@ -381,7 +379,7 @@ class PartkeyFetcherGoal(PartkeyFetcher):
 
 
     def _check_partkey_list_raw_format_validity(
-            self, 
+            self,
             partkey_list_raw: List[List[str]]
         ) -> bool:
         """Check the number of lines and the names (and order) of the partkey data, obtained via STDOUT.
@@ -402,7 +400,7 @@ class PartkeyFetcherGoal(PartkeyFetcher):
 
 
     def _convert_partkey_list_raw_to_table(
-            self, 
+            self,
             partkey_list_raw: List[List[str]]
         ) -> pd.DataFrame:
         """Convert the nested list of partkey info to a table.
@@ -431,17 +429,22 @@ class Locksmith(object):
 
 
     def __init__(
-        self, 
-        logger: object,        
-        partkey_fetcher: PartkeyFetcher, 
+        self,
+        logger: object,
+        partkey_fetcher: PartkeyFetcher,
         suggested_params: SuggestedParams,
         use_algokit: bool = True
     ) -> None:
         self.logger = logger
         self.part_key_fetcher = partkey_fetcher
-        self.suggested_params = suggested_params
         self.use_algokit = use_algokit
+        self.update_suggested_params(suggested_params)
 
+    def update_suggested_params(
+        self,
+        suggested_params: SuggestedParams
+    ):
+        self.suggested_params = suggested_params
 
     def generate_partkey(
         self: object,
@@ -456,7 +459,7 @@ class Locksmith(object):
         )
         if not valid:
             raise RuntimeError(f'Invalid command call {command_args.join(" ")}')
-        partkey_id = self._get_partkey_id(result)   
+        partkey_id = self._get_partkey_id(result)
         self.part_key_fetcher.refresh_partkey_table()
         partkey = self.part_key_fetcher.get_partkey_details(partkey_id)
         return partkey
@@ -492,12 +495,12 @@ class Locksmith(object):
 
     def _addpartkey_cmd_command_args(
         self,
-        del_acc: str, 
-        first_valid: int, 
+        del_acc: str,
+        first_valid: int,
         last_valid: int
     ) -> str:
         dilution = int(round(sqrt(last_valid - last_valid)))
-        command = ['goal', 'account', 'addpartkey', 
+        command = ['goal', 'account', 'addpartkey',
                 f'-a={del_acc}',
                 f'--roundFirstValid={first_valid}',
                 f'--roundLastValid={last_valid}',
@@ -543,9 +546,9 @@ class Locksmith(object):
             """
             partkey_id = self.part_key_fetcher.get_partkey_id_from_acc( del_acc )
             command_args = self._deletepartkey_cmd_command_args( partkey_id )
-            return run_cmd_command_and_wait_for_output( 
+            return run_cmd_command_and_wait_for_output(
                 self.logger,
-                command_args 
+                command_args
             )
 
 
@@ -555,9 +558,6 @@ if __name__ == '__main__':
     ### Manual testing ###
     # Notes:
     # - Make sure the manager for signing and the manager that made the validator app match
-
-    from utils import get_del_state
-
 
     # ### Set up Algorand client
     # algorand_client = AlgorandClient.default_local_net()
@@ -574,7 +574,7 @@ if __name__ == '__main__':
     #     signer=manager_signer
     # )
     # algorand_client.set_signer(
-    #     sender=manager.address, 
+    #     sender=manager.address,
     #     signer=manager.signer
     # )
 
@@ -606,7 +606,7 @@ if __name__ == '__main__':
     # )
 
     # # Make new key
-    # partkey = locksmith.generate_partkey(        
+    # partkey = locksmith.generate_partkey(
     #     encode_address(del_app_state.del_acc.as_bytes),
     #     del_app_state.round_start,
     #     del_app_state.round_end
@@ -630,7 +630,7 @@ if __name__ == '__main__':
         tmp = f.read()
 
     logger = logging.getLogger('main_logger')
-    logger.setLevel(logging.DEBUG) 
+    logger.setLevel(logging.DEBUG)
 
     algorand_client = AlgorandClient.default_local_net()
     algorand_client.set_suggested_params_timeout(0)
@@ -645,6 +645,6 @@ if __name__ == '__main__':
         True
     )
 
-    res = locksmith.part_key_fetcher._filter_partkeys_from_partkeyinfo_stdout(tmp) 
+    res = locksmith.part_key_fetcher._filter_partkeys_from_partkeyinfo_stdout(tmp)
 
     pass
