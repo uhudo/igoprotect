@@ -197,7 +197,7 @@ const DelegatorContractView: React.FC<DelegatorContractViewProps> = ({ user, new
           return
         }
 
-        if (BigInt(delegatorContractAppID) == 0n) {
+        if (BigInt(delegatorContractAppID) === 0n) {
           // setDelegatorContractInfo(DEFAULT_VALIDATOR_AD)
           setContractExists(false)
           return
@@ -260,13 +260,14 @@ const DelegatorContractView: React.FC<DelegatorContractViewProps> = ({ user, new
       }
     }
   }
+
   useEffect(() => {
     // Set up the interval to call updateDelegatorContract every x/2*3_000 milliseconds = x/2 rounds
     const intervalId = setInterval(updateDelegatorContract, Number((3_000 * START_ROUND_IN_FUTURE) / 2))
 
     // Clean up the interval when the component is unmounted
     return () => clearInterval(intervalId)
-  }, [])
+  }, [delegatorContractInfo])
 
   useEffect(() => {
     //Define status of delegator contract
@@ -342,7 +343,7 @@ const DelegatorContractView: React.FC<DelegatorContractViewProps> = ({ user, new
       }
     }
     setContractStatusTxt(txt)
-  }, [delegatorContractInfo])
+  }, [delegatorContractInfo, currentRound, contractOwner])
 
   if (loading) {
     return (
