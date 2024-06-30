@@ -1,10 +1,13 @@
-import { microAlgos } from '@algorandfoundation/algokit-utils'
-import { useWallet } from '@txnlab/use-wallet'
+import { useEffect, useState } from 'react'
+
 import { getApplicationAddress, makeKeyRegistrationTxnWithSuggestedParamsFromObject } from 'algosdk'
 import _ from 'lodash'
 import { useSnackbar } from 'notistack'
-import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+
+import { microAlgos } from '@algorandfoundation/algokit-utils'
+import { useWallet } from '@txnlab/use-wallet'
+
 import { DelegatorContractInfo } from '../interfaces/contract-specs'
 import { useGlobalState } from '../providers/GlobalStateProvider'
 import { START_ROUND_IN_FUTURE, UNDEFINED_DELEGATOR_CONTRACT_INFO } from '../utils/constants'
@@ -169,6 +172,7 @@ const DelegatorContractView: React.FC<DelegatorContractViewProps> = ({ user, new
         }
 
         enqueueSnackbar(`Transaction sent: ${result!.transactions[0].txID()}`, { variant: 'success' })
+        updateDelegatorContract()
       } catch (err) {
         enqueueSnackbar(`Failed to ${contractStatus.toLowerCase()}. ${err}`, { variant: 'info' })
         console.error(`Failed to ${contractStatus.toLowerCase()}: %s`, err)
@@ -181,53 +185,53 @@ const DelegatorContractView: React.FC<DelegatorContractViewProps> = ({ user, new
     setContractOwner(userProfile.delAppId === BigInt(delegatorContractAppID!))
   }, [userProfile, delegatorContractAppID])
 
-  useEffect(() => {
-    const fetchDelegator = async () => {
-      setLoading(true)
+  const fetchDelegator = async () => {
+    setLoading(true)
 
-      try {
-        // Check that delegatorContractAppID is unsigned int
-        if (
-          !delegatorContractAppID ||
-          isNaN(Number(delegatorContractAppID)) ||
-          Number(delegatorContractAppID) < 0 ||
-          !Number.isInteger(Number(delegatorContractAppID))
-        ) {
-          setContractExists(false)
-          return
-        }
-
-        if (BigInt(delegatorContractAppID) === 0n) {
-          // setDelegatorContractInfo(DEFAULT_VALIDATOR_AD)
-          setContractExists(false)
-          return
-        }
-
-        // Get info about the delegator contract
-        const delInfo = await getDelegatorContractInfo(algorandClient.client.algod, BigInt(delegatorContractAppID))
-
-        if (delInfo) {
-          // Fail if not part of noticeboard
-          if (delInfo!.noticeboardAppId !== BigInt(noticeboardApp.appId)) {
-            console.error(`Delegator ID ${delegatorContractAppID} is not part of IgoProtect ${noticeboardApp.appId}`)
-            setContractExists(false)
-            return
-          }
-
-          // Store selected delegator contract info
-          setDelegatorContractInfo(delInfo)
-          setContractExists(true)
-        } else {
-          setContractExists(false)
-        }
-      } catch (error) {
-        console.error('Failed to fetch delegator: %s', delegatorContractAppID, error)
+    try {
+      // Check that delegatorContractAppID is unsigned int
+      if (
+        !delegatorContractAppID ||
+        isNaN(Number(delegatorContractAppID)) ||
+        Number(delegatorContractAppID) < 0 ||
+        !Number.isInteger(Number(delegatorContractAppID))
+      ) {
         setContractExists(false)
-      } finally {
-        setLoading(false)
+        return
       }
-    }
 
+      if (BigInt(delegatorContractAppID) === 0n) {
+        // setDelegatorContractInfo(DEFAULT_VALIDATOR_AD)
+        setContractExists(false)
+        return
+      }
+
+      // Get info about the delegator contract
+      const delInfo = await getDelegatorContractInfo(algorandClient.client.algod, BigInt(delegatorContractAppID))
+
+      if (delInfo) {
+        // Fail if not part of noticeboard
+        if (delInfo!.noticeboardAppId !== BigInt(noticeboardApp.appId)) {
+          console.error(`Delegator ID ${delegatorContractAppID} is not part of IgoProtect ${noticeboardApp.appId}`)
+          setContractExists(false)
+          return
+        }
+
+        // Store selected delegator contract info
+        setDelegatorContractInfo(delInfo)
+        setContractExists(true)
+      } else {
+        setContractExists(false)
+      }
+    } catch (error) {
+      console.error('Failed to fetch delegator: %s', delegatorContractAppID, error)
+      setContractExists(false)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
     fetchDelegator()
   }, [delegatorContractAppID, algorandClient, noticeboardApp.appId])
 
@@ -255,11 +259,16 @@ const DelegatorContractView: React.FC<DelegatorContractViewProps> = ({ user, new
         const cRound = BigInt(algodStatus['last-round'])
 
         setCurrentRound(cRound)
+        updateContractStatus()
       } catch (error) {
         console.error('Failed to update delegator contract info: %s', delegatorContractAppID, error)
       }
     }
   }
+
+  useEffect(() => {
+    updateDelegatorContract()
+  }, [])
 
   useEffect(() => {
     // Set up the interval to call updateDelegatorContract every x/2*3_000 milliseconds = x/2 rounds
@@ -269,7 +278,7 @@ const DelegatorContractView: React.FC<DelegatorContractViewProps> = ({ user, new
     return () => clearInterval(intervalId)
   }, [delegatorContractInfo])
 
-  useEffect(() => {
+  const updateContractStatus = () => {
     //Define status of delegator contract
     let keysNeedToBeConfirmedByRound = 2n ** 64n
     let keysNeedToBeGenerated = 0n
@@ -282,33 +291,43 @@ const DelegatorContractView: React.FC<DelegatorContractViewProps> = ({ user, new
       keysNeedToBeGenerated = delegatorContractInfo.roundStart + delegatorContractInfo.valConfigMan!.setupRounds
     }
 
+    let newContractValue
+
     if (delegatorContractInfo) {
       if (delegatorContractInfo.partKeysDeposited) {
         if (delegatorContractInfo.keysConfirmed) {
           if (currentRound >= delegatorContractInfo.roundEnd) {
-            setContractStatus(CONTRACT_ENDED)
+            newContractValue = CONTRACT_ENDED
           } else {
-            setContractStatus(CONTRACT_LIVE)
+            newContractValue = CONTRACT_LIVE
           }
         } else {
-          setContractStatus(WAITING_CONFIRM_KEYS)
+          newContractValue = WAITING_CONFIRM_KEYS
         }
       } else {
         if (currentRound >= keysNeedToBeGenerated) {
-          setContractStatus(KEYS_NOT_GENERATED)
+          newContractValue = KEYS_NOT_GENERATED
         } else {
-          setContractStatus(WAITING_DEPOSIT_KEYS)
+          newContractValue = WAITING_DEPOSIT_KEYS
         }
       }
     } else {
-      setContractStatus(undefined)
+      newContractValue = undefined
     }
+    setContractStatus(newContractValue)
 
-    // // For testing
-    // setContractStatus(WAITING_CONFIRM_KEYS)
+    updateContractStatusText(newContractValue, keysNeedToBeConfirmedByRound, keysNeedToBeGenerated)
+  }
 
+  // // For testing
+  // setContractStatus(WAITING_CONFIRM_KEYS)
+  const updateContractStatusText = (
+    newContractValue: string | undefined,
+    keysNeedToBeConfirmedByRound: bigint,
+    keysNeedToBeGenerated: bigint,
+  ) => {
     let txt = ''
-    switch (contractStatus) {
+    switch (newContractValue) {
       case CONTRACT_ENDED: {
         txt = 'Contract has expired. Please end the contract.'
         break
@@ -343,6 +362,10 @@ const DelegatorContractView: React.FC<DelegatorContractViewProps> = ({ user, new
       }
     }
     setContractStatusTxt(txt)
+  }
+
+  useEffect(() => {
+    updateContractStatus()
   }, [delegatorContractInfo, currentRound, contractOwner])
 
   if (loading) {
