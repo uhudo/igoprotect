@@ -8,4 +8,4 @@ module.exports = {
     themes: ['lofi'],
   },
   plugins: [require('daisyui')],
-  }
+}
